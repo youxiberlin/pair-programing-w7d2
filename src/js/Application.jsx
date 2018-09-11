@@ -11,6 +11,10 @@ class Application extends React.Component {
 
         this._putActor = this._putActor.bind(this)
         this._sortActor = this._sortActor.bind(this)
+        this._sortPop = this._sortPop.bind(this)
+        this._deleteActor = this._deleteActor.bind(this)
+
+
     }
 
     componentDidMount() {
@@ -18,6 +22,7 @@ class Application extends React.Component {
     }
 
     render() {
+
         console.log(contacts)
 
         const mappedActors = this.state.actors.map((actor, index) => (
@@ -26,6 +31,8 @@ class Application extends React.Component {
                 name={actor.name}
                 popularity={actor.popularity}
                 key={index}
+                index={index}
+                deleteActor={this._deleteActor}
             />
         ));
 
@@ -34,14 +41,15 @@ class Application extends React.Component {
                 <h1>IronContacts</h1>
                 <button onClick={this._putActor}>Add Randome Contact</button>
                 <button onClick={this._sortActor}>Sort by Name</button>
-
-                <table>
+                <table><tbody>
                     <tr>
                         <th>Picture</th>
                         <th>Name</th>
                         <th>Popularity</th>
+                        <th>Action</th>
                     </tr>
                     {mappedActors}
+                </tbody>
                 </table>
             </div>
         )
@@ -72,9 +80,49 @@ class Application extends React.Component {
         console.log(this.state.actors);
     }
 
+    _compareName(a, b) {
+        if (a.name > b.name) {
+            return 1;
+        } else if (a.name < b.name) {
+            return -1;
+        } else {
+            return 0;
+        }
+
+    }
+
     _sortActor() {
 
+        this.setState({
+            actors: this.state.actors.sort(this._compareName)
+        })
+        console.log(this.state.actors)
+    }
 
+    _comparePop(a, b) {
+        if (a.popularity > b.popularity) {
+            return -1;
+        } else if (a.popularity < b.popularity) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+    _sortPop() {
+        this.setState({
+            actors: this.state.actors.sort(this._comparePop)
+        })
+    }
+
+    _deleteActor(index) {
+        console.log(index)
+        const array = [...this.state.actors]
+        array.splice(index, 1)
+        this.setState({
+            actors: array
+        })
     }
 }
 
